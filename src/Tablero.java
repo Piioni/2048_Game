@@ -26,7 +26,11 @@ public class Tablero {
 
             // Imprimir valores de la fila con separadores y 2 espacios
             for (int j = 0; j < columnas; j++) {
-                System.out.print("|  " + tablero[i][j] + "  "); // |  X  |
+                if (tablero[i][j] == 0) {
+                    System.out.print("|     "); // |     |
+                } else {
+                    System.out.print("|  " + tablero[i][j] + "  "); // |  X  |
+                }
             }
             System.out.println("|");
         }
@@ -38,45 +42,29 @@ public class Tablero {
         System.out.println("+");
     }
 
-    // Metodo para generar un 2 o un 4 en solo una celda vacía
-    public void generarNumero() {
-        Random r = new Random();
-        // Contar cuántas celdas vacías hay
-        int celdasVacias = 0;
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                if (tablero[i][j] == 0) {
-                    celdasVacias++;
-                }
+    public void generarNumero(){
+        boolean celdaEncotrada = false;
+        while (!celdaEncotrada){
+            Random r = new Random();
+            int i = r.nextInt(filas);
+            int j = r.nextInt(columnas);
+            if (tablero[i][j] == 0){
+                tablero[i][j] = (r.nextInt(10) < 6) ? 2 : 4;
+                celdaEncotrada = true;
             }
         }
-
-        // Si no hay celdas vacías, no se puede colocar un número
-        if (celdasVacias == 0) {
-            System.out.println("No hay celdas vacías para colocar un número.");
-            finPartida();
-        }
-
-        // Elegir una celda vacía al azar
-        int celdaAleatoria = r.nextInt(celdasVacias) + 1;
-        int contador = 0;
-
-        for (int i = 0; i < filas ; i++){
-            for (int j = 0; j < columnas; j++){
-                if (tablero[i][j] == 0){
-                    contador++;
-                    if (contador == celdaAleatoria){
-                        tablero[i][j] = (r.nextInt(10) < 8) ? 2 : 4;
-                        return;
-                    }
-                }
-            }
-        }
-
-
     }
 
     private void finPartida() {
+    }
+
+    // Metodo para mover las celdas hacia arriba
+    public void moverArriba() {
+        for (int i = 0 ;i < filas; i++){
+            for (int j = 0; j < columnas; j++){
+
+            }
+        }
     }
 
 }

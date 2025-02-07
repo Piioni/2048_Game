@@ -56,49 +56,56 @@ public class Tablero {
         }
     }
 
-    // Metodo para mover el tablero
+    // Metodo para mover el tablero hacia arriba
     public void moverArriba() {
-        boolean moved;
-        do {
-            moved = false;
-            for (int col = 0; col < columnas; col++) {
-                for (int fil = 1; fil < filas; fil++) {
-                    if (tablero[fil][col] != 0 && tablero[fil - 1][col] == 0) {
-                        tablero[fil - 1][col] = tablero[fil][col];
-                        tablero[fil][col] = 0;
-                        moved = true;
-                    } else if (tablero[fil][col] != 0 && tablero[fil - 1][col] == tablero[fil][col]) {
-                        tablero[fil - 1][col] *= 2;
-                        tablero[fil][col] = 0;
-                        moved = true;
+        // Se recorre el tablero de arriba a abajo y de izquierda a derecha
+        for (int col = 0; col < columnas; col++) {
+            // Se crea un nuevo array para almacenar la columna
+            int[] nuevaColumna = new int[filas];
+            // Se inicializa el indice en 0
+            int indice = 0;
+            for (int fil = 0; fil < filas; fil++) {
+                // Si la celda del tablero no es 0
+                if (tablero[fil][col] != 0) {
+                    // Si el indice es mayor a 0 y la celda anterior es igual a la celda actual
+                    if (indice > 0 && nuevaColumna[indice - 1] == tablero[fil][col]) {
+                        // Se multiplica por 2 la celda anterior
+                        nuevaColumna[indice - 1] *= 2;
+                    } else {
+                        // Se agrega la celda al nuevo array y se incrementa el indice
+                        nuevaColumna[indice++] = tablero[fil][col];
                     }
                 }
             }
-        } while (moved);
+            // Se agregan los valores al tablero
+            for (int fil = 0; fil < filas; fil++) {
+                tablero[fil][col] = nuevaColumna[fil];
+            }
+        }
         generarNumero();
         comprobarFinPartida();
     }
 
     public void moverAbajo() {
-        boolean moved;
-        do {
-            moved = false;
-            for (int col = 0; col < columnas; col++) {
-                for (int fil = filas - 2; fil >= 0; fil--) {
-                    if (tablero[fil][col] != 0 && tablero[fil + 1][col] == 0) {
-                        tablero[fil + 1][col] = tablero[fil][col];
-                        tablero[fil][col] = 0;
-                        moved = true;
-                    } else if (tablero[fil][col] != 0 && tablero[fil + 1][col] == tablero[fil][col]) {
-                        tablero[fil + 1][col] *= 2;
-                        tablero[fil][col] = 0;
-                        moved = true;
+        for (int col = 0; col < columnas; col ++){
+            int[] nuevaColumna = new int[filas];
+            int indice = filas - 1;
+            for (int fil = filas - 1; fil >= 0; fil--){
+                // Si la celda del tablero no es 0
+                if (tablero[fil][col] != 0){
+                    // Si el indice es menor al tamaño del tablero y la celda siguiente es igual a la celda actual
+                    if (indice < filas - 1 && nuevaColumna[indice + 1] == tablero[fil][col]){
+                        nuevaColumna[indice + 1] *= 2;
+                    } else {
+                        nuevaColumna[indice--] = tablero[fil][col];
                     }
                 }
             }
-        } while (moved);
-        generarNumero();
-        comprobarFinPartida();
+            for (int fil = filas - 1; fil >= 0; fil--){
+                tablero[fil][col] = nuevaColumna[fil];
+            }
+
+        }
     }
 
     public void moverIzquierda() {

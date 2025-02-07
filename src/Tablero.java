@@ -4,6 +4,7 @@ public class Tablero {
     private final int filas = 4;
     private final int columnas = 4;
     private boolean juegoTerminado = false;
+    private boolean win = false;
 
     private final int[][] tablero = new int[filas][columnas];
 
@@ -170,22 +171,40 @@ public class Tablero {
 
 
     private void comprobarFinPartida() {
-        int celdasVacias = 0;
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
+                if (tablero[i][j] == 2048) {
+                    juegoTerminado = true; // Se ha alcanzado el valor 2048
+                    win = true;
+                    return;
+                }
                 if (tablero[i][j] == 0) {
-                    celdasVacias++;
+                    return; // Hay una celda vacía, el juego no ha terminado
+                }
+                // Comprobar celdas adyacentes
+                if (i > 0 && tablero[i][j] == tablero[i - 1][j]) {
+                    return; // Hay un movimiento válido hacia arriba
+                }
+                if (i < filas - 1 && tablero[i][j] == tablero[i + 1][j]) {
+                    return; // Hay un movimiento válido hacia abajo
+                }
+                if (j > 0 && tablero[i][j] == tablero[i][j - 1]) {
+                    return; // Hay un movimiento válido hacia la izquierda
+                }
+                if (j < columnas - 1 && tablero[i][j] == tablero[i][j + 1]) {
+                    return; // Hay un movimiento válido hacia la derecha
                 }
             }
         }
-        if (celdasVacias == 0) {
-            juegoTerminado = true;
-        }
+        juegoTerminado = true; // No hay celdas vacías ni movimientos válidos
     }
 
     public boolean isJuegoTerminado() {
         return juegoTerminado;
     }
 
+    public boolean isWin() {
+        return win;
+    }
 
 }

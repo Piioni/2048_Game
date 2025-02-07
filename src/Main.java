@@ -6,10 +6,11 @@ public class Main {
         Tablero tablero = new Tablero();
         tablero.imprimirTablero();
 
-        while (!tablero.isJuegoTerminado()){
+
+        while (!tablero.isJuegoTerminado()) {
             Scanner scanner = new Scanner(System.in);
             String movimiento = scanner.next();
-            switch (movimiento){
+            switch (movimiento) {
                 case "w":
                     tablero.moverArriba();
                     break;
@@ -27,8 +28,12 @@ public class Main {
             }
             tablero.imprimirTablero();
         }
-        System.out.println("Juego terminado");
-        tablero.imprimirTablero();
+        if (tablero.isWin()) {
+            System.out.println("¡Felicidades, has ganado!");
+        } else {
+            System.out.println("¡Lo siento, has perdido!");
+        }
+
 
     }
 }

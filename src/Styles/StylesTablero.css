@@ -12,20 +12,6 @@
     -fx-border-radius: 50px; /* Radio del borde */
 }
 
-.celda-texto-oscuras{
-    -fx-font-family: Rubik;
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #ffffff;
-}
-
-.celda-texto-claras{
-    -fx-font-family: Rubik;
-    -fx-font-size: 30px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #756452;
-}
-
 .button {
     -fx-background-color: #3a2d28;
     -fx-text-fill: white;

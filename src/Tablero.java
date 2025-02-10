@@ -90,7 +90,6 @@ public class Tablero {
         }
     }
 
-    // Metodo para mover el tablero hacia arriba
     public void moverArriba() {
         // Se recorre el tablero de arriba a abajo y de izquierda a derecha
         for (int col = 0; col < columnas; col++) {
@@ -381,11 +380,7 @@ public class Tablero {
         alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
         Optional<ButtonType> result = alert.showAndWait();
 
-        if (result.isPresent() && result.get() == buttonTypeSi) {
-            return true;
-        } else {
-            return false;
-        }
+        return result.isPresent() && result.get() == buttonTypeSi;
 
 
     }

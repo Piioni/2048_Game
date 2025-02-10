@@ -1,12 +1,12 @@
 /* stylesMenu.css */
 .root {
-    -fx-background-color: linear-gradient(to bottom, #cbad8d, #d1c7bd);
+    -fx-background-color: linear-gradient(to bottom, #9a8878,#cbad8d);
 }
 
 .label-title {
-    -fx-font-size: 50px;
+    -fx-font-size: 75px;
     -fx-font-weight: bold;
-    -fx-text-fill: #333;
+    -fx-text-fill: #252424;
     -fx-padding-bottom: 20px;
 }
 

@@ -35,13 +35,30 @@ public class MenuPrincipal {
             Tablero tablero = new Tablero(stage);
             stage.setScene(tablero.getScene());
         });
+        btnJugar.setPrefWidth(150);
+
+        Button btnCargar = new Button("Cargar");
+        btnCargar.setOnAction(e -> {
+
+
+        });
+        btnCargar.setPrefWidth(150);
+
+
+        Button btnPuntuaciones = new Button("Puntuaciones");
+        btnPuntuaciones.setOnAction(e -> {
+            Puntuaciones puntuaciones = new Puntuaciones(stage);
+            stage.setScene(puntuaciones.getScene());
+        });
+        btnPuntuaciones.setPrefWidth(150);
 
         Button btnSalir = new Button("Salir");
         btnSalir.setOnAction(e -> System.exit(0));
+        btnSalir.setPrefWidth(150);
 
-        menuLayout.getChildren().addAll(tituloBox, btnJugar, btnSalir);
+        menuLayout.getChildren().addAll(tituloBox, btnJugar, btnCargar, btnPuntuaciones, btnSalir);
 
-        Scene scene = new Scene(menuLayout, 450, 400);
+        Scene scene = new Scene(menuLayout, 550, 500);
         scene.getStylesheets().add("./Styles/StylesMenu.css");
 
         return scene;

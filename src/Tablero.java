@@ -1,6 +1,7 @@
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -10,6 +11,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class Tablero {
@@ -19,7 +21,7 @@ public class Tablero {
     private boolean win = false;
     private final int[][] tablero = new int[filas][columnas];
     private final Stage stage;
-    GridPane tableroLayout ;
+    GridPane tableroLayout;
 
     // Constructor de la clase Tablero que inicializa el tablero con dos números aleatorios en la stage dada
     public Tablero(Stage stage) {
@@ -62,6 +64,7 @@ public class Tablero {
     }
 
     public void generarNumero() {
+        // Comprobar si hay espacio en el tablero
         boolean hayEspacio = false;
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -74,6 +77,7 @@ public class Tablero {
         }
         if (!hayEspacio) return;
 
+        // Generar un número aleatorio en una celda vacía
         boolean celdaEncotrada = false;
         while (!celdaEncotrada) {
             Random r = new Random();
@@ -241,13 +245,19 @@ public class Tablero {
         tableroBox.setAlignment(javafx.geometry.Pos.CENTER);
 
         Button btnReinicar = new Button("Reiniciar");
-        btnReinicar.setOnAction(e -> {
-            Tablero tablero = new Tablero(stage);
-            stage.setScene(tablero.getScene());
-        });
+        btnReinicar.setOnAction(e -> reiniciarJuego());
 
         Button btnSalir = new Button("Salir");
-        btnSalir.setOnAction(e -> MainApp.mostrarMenuPrincipal());
+        btnSalir.setOnAction(e -> {
+            boolean salir = AlertaConfirmacion("Salir", "¿Estás seguro de que quieres salir?");
+            if (salir) {
+                MainApp.mostrarMenuPrincipal();
+            } else {
+                mostrarAlerta("No saliste", "Sos bobo");
+                tableroLayout.requestFocus();
+
+            }
+        });
 
         HBox botonesBox = new HBox(40);
         botonesBox.getChildren().addAll(btnReinicar, btnSalir);
@@ -274,9 +284,28 @@ public class Tablero {
         return scene;
     }
 
+    private void reiniciarJuego() {
+        boolean reiniciar = AlertaConfirmacion("Reiniciar", "¿Estás seguro de que quieres reiniciar el juego?");
+        if (reiniciar) {
+            for (int i = 0; i < filas; i++) {
+                for (int j = 0; j < columnas; j++) {
+                    tablero[i][j] = 0;
+                }
+            }
+            generarNumero();
+            generarNumero();
+            juegoTerminado = false;
+            win = false;
+            actualizarTablero();
+
+        } else {
+            mostrarAlerta("No reiniciaste", "Sos bobo");
+            tableroLayout.requestFocus();
+        }
+    }
+
     private void actualizarTablero() {
         tableroLayout.getChildren().clear(); // Eliminar celdas anteriores
-
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 StackPane celda = new StackPane();
@@ -306,9 +335,9 @@ public class Tablero {
 
     private Text getText(int i, int j) {
         Text texto = new Text(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
-        if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 || tablero[i][j] == 64 ||
-                tablero[i][j] == 128 || tablero[i][j] == 256 || tablero[i][j] == 512 ||
-                tablero[i][j] == 1024 || tablero[i][j] == 2048) {
+        if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 ||
+                tablero[i][j] == 64 || tablero[i][j] == 128 || tablero[i][j] == 256 ||
+                tablero[i][j] == 512 || tablero[i][j] == 1024 || tablero[i][j] == 2048) {
             texto.setStyle(" -fx-font-family: Rubik ;-fx-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;");
         } else if (tablero[i][j] == 2 || tablero[i][j] == 4) {
             texto.setStyle("-fx-font-family: Rubik; -fx-fill: #756452; -fx-font-size: 30px; -fx-font-weight: bold;");
@@ -339,6 +368,26 @@ public class Tablero {
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
+    }
+
+    private boolean AlertaConfirmacion(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        ButtonType buttonTypeSi = new ButtonType("Sí");
+        ButtonType buttonTypeNo = new ButtonType("No");
+
+        alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == buttonTypeSi) {
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
 

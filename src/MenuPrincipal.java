@@ -32,7 +32,7 @@ public class MenuPrincipal {
         // Creation de los botones
         Button btnJugar = new Button("Jugar");
         btnJugar.setOnAction(e -> {
-            Tablero tablero = new Tablero();
+            Tablero tablero = new Tablero(stage);
             stage.setScene(tablero.getScene());
         });
 

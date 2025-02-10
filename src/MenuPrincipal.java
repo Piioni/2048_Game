@@ -98,7 +98,12 @@ public class MenuPrincipal {
             while (scanner.hasNextLine()) {
                 json.append(scanner.nextLine());
             }
+            // Devolver lista vacia si el archivo esta vacio
             String jsonString = json.toString();
+            if (jsonString.isEmpty()) {
+                return scores; // Return empty list if file is empty
+            }
+            // Parse JSON string
             jsonString = jsonString.substring(1, jsonString.length() - 1); // Remove brackets
             String[] scoreStrings = jsonString.split("},\\{");
             for (String scoreString : scoreStrings) {

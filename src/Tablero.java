@@ -194,7 +194,7 @@ public class Tablero {
                 }
             }
             // Se agregan los valores al tablero
-            System.arraycopy(nuevaFila, 0, tablero[fil], 0, columnas );
+            System.arraycopy(nuevaFila, 0, tablero[fil], 0, columnas);
         }
         if (mooved) generarNumero();
         comprobarFinPartida();
@@ -269,16 +269,17 @@ public class Tablero {
         scene.getStylesheets().add("/Styles/StylesTablero.css");
 
         scene.setOnKeyPressed(e -> {
-            switch (e.getCode()) {
-                case UP, W -> moverArriba();
-                case DOWN, S -> moverAbajo();
-                case LEFT, A -> moverIzquierda();
-                case RIGHT, D -> moverDerecha();
+            if (!juegoTerminado) {
+                switch (e.getCode()) {
+                    case UP, W -> moverArriba();
+                    case DOWN, S -> moverAbajo();
+                    case LEFT, A -> moverIzquierda();
+                    case RIGHT, D -> moverDerecha();
+                }
+                actualizarTablero();
+                tableroLayout.requestFocus();
             }
-            actualizarTablero();
-            tableroLayout.requestFocus();
         });
-
         return scene;
     }
 
@@ -335,6 +336,14 @@ public class Tablero {
 
     }
 
+    private void saveScores() {
+        MenuPrincipal.saveScores(scores);
+    }
+
+    private void addScore(int score, boolean win) {
+        scores.add(new Score(score, win));
+    }
+
     private Text getText(int i, int j) {
         // Se crea un texto con el valor de la celda y se le da un estilo dependiendo del valor
         Text texto = new Text(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
@@ -388,12 +397,6 @@ public class Tablero {
         return result.isPresent() && result.get() == buttonTypeSi;
     }
 
-    private void saveScores(){
-        MenuPrincipal.saveScores(scores);
-    }
 
-    private void addScore(int score, boolean win){
-        scores.add(new Score(score, win));
-    }
 
 }

@@ -36,33 +36,6 @@ public class Tablero {
     }
 
 
-    // Metodo para imprimir el tablero con celdas y valores dentro de ellas en consola
-    public void imprimirTablero() {
-        for (int i = 0; i < filas; i++) {
-            // Imprimir línea horizontal
-            for (int j = 0; j < columnas; j++) {
-                System.out.print("+---------"); // +---------+---------+---------+---------+
-            }
-            System.out.println("+");
-
-            // Imprimir valores de la fila con separadores y 5 espacios
-            for (int j = 0; j < columnas; j++) {
-                if (tablero[i][j] == 0) {
-                    System.out.print("|         "); // |         |
-                } else {
-                    System.out.printf("|%5d    ", tablero[i][j]); //  |   1024  |
-                }
-            }
-            System.out.println("|");
-        }
-
-        // Imprimir la última línea horizontal
-        for (int j = 0; j < columnas; j++) {
-            System.out.print("+---------");
-        }
-        System.out.println("+");
-    }
-
     public void generarNumero() {
         // Comprobar si hay espacio en el tablero
         boolean hayEspacio = false;
@@ -91,6 +64,7 @@ public class Tablero {
     }
 
     public void moverArriba() {
+        boolean mooved = false;
         // Se recorre el tablero de arriba a abajo y de izquierda a derecha
         for (int col = 0; col < columnas; col++) {
             int[] nuevaColumna = new int[filas];
@@ -103,7 +77,12 @@ public class Tablero {
                     if (indice > 0 && nuevaColumna[indice - 1] == tablero[fil][col]) {
                         // Se multiplica por 2 la celda anterior
                         nuevaColumna[indice - 1] *= 2;
+                        mooved = true;
                     } else {
+                        // Si el índice es diferente a la fila actual
+                        if (indice != fil) {
+                            mooved = true;
+                        }
                         // Se agrega la celda al nuevo array y se incrementa el índice
                         nuevaColumna[indice++] = tablero[fil][col];
                     }
@@ -114,11 +93,12 @@ public class Tablero {
                 tablero[fil][col] = nuevaColumna[fil];
             }
         }
-        generarNumero();
+        if (mooved) generarNumero();
         comprobarFinPartida();
     }
 
     public void moverAbajo() {
+        boolean mooved = false;
         // Se recorre el tablero de abajo a arriba y de izquierda a derecha
         for (int col = 0; col < columnas; col++) {
             int[] nuevaColumna = new int[filas];
@@ -131,7 +111,12 @@ public class Tablero {
                     if (indice < filas - 1 && nuevaColumna[indice + 1] == tablero[fil][col]) {
                         // Se multiplica por 2 la celda de abajo
                         nuevaColumna[indice + 1] *= 2;
+                        mooved = true;
                     } else {
+                        // Si el índice es diferente a la fila actual
+                        if (indice != fil) {
+                            mooved = true;
+                        }
                         // Se agrega la el valor a la celda de abajo y se decrementa el índice
                         nuevaColumna[indice--] = tablero[fil][col];
                     }
@@ -143,11 +128,12 @@ public class Tablero {
             }
 
         }
-        generarNumero();
+        if (mooved) generarNumero();
         comprobarFinPartida();
     }
 
     public void moverIzquierda() {
+        boolean mooved = false;
         // Se recorre el tablero de izquierda a derecha y de arriba a abajo
         for (int fil = 0; fil < filas; fil++) {
             int[] nuevaFila = new int[columnas];
@@ -159,7 +145,12 @@ public class Tablero {
                     // Si el índice es mayor a 0 y la celda del lado izquierdo es igual a la celda actual
                     if (indice > 0 && nuevaFila[indice - 1] == tablero[fil][col]) {
                         nuevaFila[indice - 1] *= 2;
+                        mooved = true;
                     } else {
+                        // Si el índice es diferente a la columna actual
+                        if (indice != col) {
+                            mooved = true;
+                        }
                         // Se agrega la celda al nuevo array y se incrementa el índice
                         nuevaFila[indice++] = tablero[fil][col];
                     }
@@ -170,11 +161,12 @@ public class Tablero {
                 tablero[fil][col] = nuevaFila[col];
             }
         }
-        generarNumero();
+        if (mooved) generarNumero();
         comprobarFinPartida();
     }
 
     public void moverDerecha() {
+        boolean mooved = false;
         // Se recorre el tablero de derecha a izquierda y de arriba a abajo
         for (int fil = 0; fil < filas; fil++) {
             int[] nuevaFila = new int[columnas];
@@ -186,7 +178,12 @@ public class Tablero {
                     // Si el índice es menor a la última columna y la celda del lado derecho es igual a la celda actual
                     if (indice < columnas - 1 && nuevaFila[indice + 1] == tablero[fil][col]) {
                         nuevaFila[indice + 1] *= 2;
+                        mooved = true;
                     } else {
+                        // Si el índice es diferente a la columna actual
+                        if (indice != col) {
+                            mooved = true;
+                        }
                         // Se agrega la celda al nuevo array y se decrementa el índice
                         nuevaFila[indice--] = tablero[fil][col];
                     }
@@ -197,7 +194,7 @@ public class Tablero {
                 tablero[fil][col] = nuevaFila[col];
             }
         }
-        generarNumero();
+        if (mooved) generarNumero();
         comprobarFinPartida();
     }
 
@@ -333,6 +330,7 @@ public class Tablero {
     }
 
     private Text getText(int i, int j) {
+        // Se crea un texto con el valor de la celda y se le da un estilo dependiendo del valor
         Text texto = new Text(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
         if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 ||
                 tablero[i][j] == 64 || tablero[i][j] == 128 || tablero[i][j] == 256 ||
@@ -380,10 +378,8 @@ public class Tablero {
         alert.getButtonTypes().setAll(buttonTypeSi, buttonTypeNo);
         Optional<ButtonType> result = alert.showAndWait();
 
+        // Si el usuario presiona el botón "Sí" se devuelve true, de lo contrario false
         return result.isPresent() && result.get() == buttonTypeSi;
-
-
     }
-
 
 }

@@ -11,8 +11,12 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.util.Optional;
-import java.util.Random;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.*;
 
 public class Tablero {
     private final int filas = 4;
@@ -157,9 +161,7 @@ public class Tablero {
                 }
             }
             // Se agregan los valores al tablero
-            for (int col = 0; col < columnas; col++) {
-                tablero[fil][col] = nuevaFila[col];
-            }
+            System.arraycopy(nuevaFila, 0, tablero[fil], 0, columnas);
         }
         if (mooved) generarNumero();
         comprobarFinPartida();
@@ -190,9 +192,7 @@ public class Tablero {
                 }
             }
             // Se agregan los valores al tablero
-            for (int col = columnas - 1; col >= 0; col--) {
-                tablero[fil][col] = nuevaFila[col];
-            }
+            System.arraycopy(nuevaFila, 0, tablero[fil], 0, columnas );
         }
         if (mooved) generarNumero();
         comprobarFinPartida();
@@ -327,6 +327,7 @@ public class Tablero {
             }
         }
 
+
     }
 
     private Text getText(int i, int j) {
@@ -381,5 +382,7 @@ public class Tablero {
         // Si el usuario presiona el botón "Sí" se devuelve true, de lo contrario false
         return result.isPresent() && result.get() == buttonTypeSi;
     }
+
+
 
 }

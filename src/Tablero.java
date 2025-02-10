@@ -31,7 +31,7 @@ public class Tablero {
     }
 
 
-    // Metodo para imprimir el tablero con celdas y valores dentro de ellas
+    // Metodo para imprimir el tablero con celdas y valores dentro de ellas en consola
     public void imprimirTablero() {
         for (int i = 0; i < filas; i++) {
             // Imprimir línea horizontal
@@ -102,15 +102,15 @@ public class Tablero {
 
     public void moverAbajo() {
         // Se recorre el tablero de abajo a arriba y de izquierda a derecha
-        for (int col = 0; col < columnas; col ++){
+        for (int col = 0; col < columnas; col++) {
             int[] nuevaColumna = new int[filas];
             // Se inicializa el índice en la última fila
             int indice = filas - 1;
-            for (int fil = filas - 1; fil >= 0; fil--){
+            for (int fil = filas - 1; fil >= 0; fil--) {
                 // Si la celda del tablero no es 0
-                if (tablero[fil][col] != 0){
+                if (tablero[fil][col] != 0) {
                     // Si el índice es menor a la última fila y la celda de abajo es igual a la celda actual
-                    if (indice < filas - 1 && nuevaColumna[indice + 1] == tablero[fil][col]){
+                    if (indice < filas - 1 && nuevaColumna[indice + 1] == tablero[fil][col]) {
                         // Se multiplica por 2 la celda de abajo
                         nuevaColumna[indice + 1] *= 2;
                     } else {
@@ -119,7 +119,7 @@ public class Tablero {
                     }
                 }
             }
-            for (int fil = filas - 1; fil >= 0; fil--){
+            for (int fil = filas - 1; fil >= 0; fil--) {
                 // Se agregan los valores al tablero
                 tablero[fil][col] = nuevaColumna[fil];
             }
@@ -183,7 +183,6 @@ public class Tablero {
         comprobarFinPartida();
     }
 
-
     private void comprobarFinPartida() {
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
@@ -240,12 +239,7 @@ public class Tablero {
                 fondo.setArcWidth(20);
                 fondo.setArcHeight(20);
 
-                Text texto = new Text(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
-                if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 || tablero[i][j] == 64 || tablero[i][j] == 128 || tablero[i][j] == 256 || tablero[i][j] == 512 || tablero[i][j] == 1024 || tablero[i][j] == 2048) {
-                    texto.getStyleClass().add("celda-texto-oscuras");
-                } else if (tablero[i][j] == 2 || tablero[i][j] == 4) {
-                    texto.getStyleClass().add("celda-texto-claras");
-                }
+                Text texto = getText(i, j);
 
                 celda.getChildren().addAll(fondo, texto);
                 tableroLayout.add(celda, j, i);
@@ -273,7 +267,7 @@ public class Tablero {
         tableroCompleto.getChildren().addAll(tableroBox, botonesBox);
         tableroCompleto.setAlignment(javafx.geometry.Pos.CENTER);
 
-        Scene scene = new Scene(tableroCompleto, 472, 500);
+        Scene scene = new Scene(tableroCompleto, 440, 500);
         scene.getStylesheets().add(getClass().getResource("/Styles/StylesTablero.css").toExternalForm());
 
         scene.setOnKeyPressed(e -> {
@@ -287,9 +281,20 @@ public class Tablero {
 
         });
 
-
         return scene;
 
+    }
+
+    private Text getText(int i, int j) {
+        Text texto = new Text(tablero[i][j] == 0 ? "" : String.valueOf(tablero[i][j]));
+        if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 || tablero[i][j] == 64 ||
+                tablero[i][j] == 128 || tablero[i][j] == 256 || tablero[i][j] == 512 ||
+                tablero[i][j] == 1024 || tablero[i][j] == 2048) {
+            texto.setStyle("-fx-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;");
+        } else if (tablero[i][j] == 2 || tablero[i][j] == 4) {
+            texto.setStyle("-fx-fill: #756452; -fx-font-size: 30px; -fx-font-weight: bold;");
+        }
+        return texto;
     }
 
     private Color obtenerColor(int valor) {

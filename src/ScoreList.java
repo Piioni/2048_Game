@@ -15,9 +15,11 @@ import java.util.Scanner;
 
 public class ScoreList {
     private Stage stage;
+    private List<Score> scores ;
 
-    public ScoreList(Stage stage) {
+    public ScoreList(Stage stage, List<Score> scores) {
         this.stage = stage;
+        this.scores = scores;
     }
 
     public Scene getScene() {
@@ -36,7 +38,6 @@ public class ScoreList {
 
         // Creacion de la tabla de puntuaciones
         VBox tablaPuntuaciones = new VBox(10);
-        List<Score> scores = loadScores();
         for (Score score : scores) {
             Label scoreLabel = new Label("Score: " + score.getScore() + ", Win: " + score.isWin() + ", Date: " + score.getDate());
             scoreLabel.getStyleClass().add("score-label");
@@ -59,27 +60,4 @@ public class ScoreList {
         return scene;
     }
 
-    private List<Score> loadScores() {
-        List<Score> scores = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File("scores.json"))) {
-            StringBuilder json = new StringBuilder();
-            while (scanner.hasNextLine()) {
-                json.append(scanner.nextLine());
-            }
-            String jsonString = json.toString();
-            jsonString = jsonString.substring(1, jsonString.length() - 1); // Remove brackets
-            String[] scoreStrings = jsonString.split("},\\{");
-            for (String scoreString : scoreStrings) {
-                scoreString = scoreString.replace("{", "").replace("}", "");
-                String[] fields = scoreString.split(",");
-                int scoreValue = Integer.parseInt(fields[0].split(":")[1]);
-                boolean win = Boolean.parseBoolean(fields[1].split(":")[1]);
-                LocalDate date = LocalDate.parse(fields[2].split(":")[1].replace("\"", ""));
-                scores.add(new Score(scoreValue, win, date));
-            }
-        } catch (FileNotFoundException e) {
-            // Default to an empty list if file not found
-        }
-        return scores;
-    }
 }

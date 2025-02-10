@@ -41,7 +41,8 @@ public class MenuPrincipal {
         // Creation de los botones
         Button btnJugar = new Button("Jugar");
         btnJugar.setOnAction(e -> {
-            Tablero tablero = new Tablero(stage);
+            List<Score> scores = loadScores();
+            Tablero tablero = new Tablero(stage, scores);
             stage.setScene(tablero.getScene());
         });
         btnJugar.setPrefWidth(150);
@@ -56,7 +57,8 @@ public class MenuPrincipal {
 
         Button btnPuntuaciones = new Button("Puntuaciones");
         btnPuntuaciones.setOnAction(e -> {
-            ScoreList puntuaciones = new ScoreList(stage);
+            List<Score> scores = loadScores();
+            ScoreList puntuaciones = new ScoreList(stage, scores);
             stage.setScene(puntuaciones.getScene());
         });
         btnPuntuaciones.setPrefWidth(150);
@@ -73,7 +75,7 @@ public class MenuPrincipal {
         return scene;
     }
 
-    private void saveScores(List<Score> scores) {
+    public static void saveScores(List<Score> scores) {
         try (FileWriter out = new FileWriter("scores.json")) {
             out.write("[");
             for (int i = 0; i < scores.size(); i++) {

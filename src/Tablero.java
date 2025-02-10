@@ -11,11 +11,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 public class Tablero {
@@ -24,12 +19,15 @@ public class Tablero {
     private boolean juegoTerminado = false;
     private boolean win = false;
     private final int[][] tablero = new int[filas][columnas];
+    private List<Score> scores;
+    private int score = 0;
     private final Stage stage;
     GridPane tableroLayout;
 
     // Constructor de la clase Tablero que inicializa el tablero con dos números aleatorios en la stage dada
-    public Tablero(Stage stage) {
+    public Tablero(Stage stage, List<Score> scores) {
         this.stage = stage;
+        this.scores = scores;
         for (int i = 0; i < filas; i++) {
             for (int j = 0; j < columnas; j++) {
                 tablero[i][j] = 0;
@@ -81,6 +79,7 @@ public class Tablero {
                     if (indice > 0 && nuevaColumna[indice - 1] == tablero[fil][col]) {
                         // Se multiplica por 2 la celda anterior
                         nuevaColumna[indice - 1] *= 2;
+                        score += nuevaColumna[indice - 1];
                         mooved = true;
                     } else {
                         // Si el índice es diferente a la fila actual
@@ -115,6 +114,7 @@ public class Tablero {
                     if (indice < filas - 1 && nuevaColumna[indice + 1] == tablero[fil][col]) {
                         // Se multiplica por 2 la celda de abajo
                         nuevaColumna[indice + 1] *= 2;
+                        score += nuevaColumna[indice + 1];
                         mooved = true;
                     } else {
                         // Si el índice es diferente a la fila actual
@@ -149,6 +149,7 @@ public class Tablero {
                     // Si el índice es mayor a 0 y la celda del lado izquierdo es igual a la celda actual
                     if (indice > 0 && nuevaFila[indice - 1] == tablero[fil][col]) {
                         nuevaFila[indice - 1] *= 2;
+                        score += nuevaFila[indice - 1];
                         mooved = true;
                     } else {
                         // Si el índice es diferente a la columna actual
@@ -180,6 +181,7 @@ public class Tablero {
                     // Si el índice es menor a la última columna y la celda del lado derecho es igual a la celda actual
                     if (indice < columnas - 1 && nuevaFila[indice + 1] == tablero[fil][col]) {
                         nuevaFila[indice + 1] *= 2;
+                        score += nuevaFila[indice + 1];
                         mooved = true;
                     } else {
                         // Si el índice es diferente a la columna actual
@@ -224,7 +226,7 @@ public class Tablero {
                 }
             }
         }
-        juegoTerminado = true; // No hay celdas vacías ni movimientos válidos
+        juegoTerminado = true;
     }
 
     public Scene getScene() {
@@ -292,6 +294,7 @@ public class Tablero {
             generarNumero();
             juegoTerminado = false;
             win = false;
+            score = 0;
             actualizarTablero();
 
         } else {
@@ -320,6 +323,8 @@ public class Tablero {
         }
 
         if (juegoTerminado) {
+            addScore(score, win);
+            saveScores();
             if (win) {
                 mostrarAlerta("¡Felicidades!", "¡Has ganado!");
             } else {
@@ -383,6 +388,12 @@ public class Tablero {
         return result.isPresent() && result.get() == buttonTypeSi;
     }
 
+    private void saveScores(){
+        MenuPrincipal.saveScores(scores);
+    }
 
+    private void addScore(int score, boolean win){
+        scores.add(new Score(score, win));
+    }
 
 }

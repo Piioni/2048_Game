@@ -1,4 +1,5 @@
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -18,7 +19,9 @@ public class Tablero {
     private boolean win = false;
     private final int[][] tablero = new int[filas][columnas];
     private final Stage stage;
+    GridPane tableroLayout ;
 
+    // Constructor de la clase Tablero que inicializa el tablero con dos números aleatorios en la stage dada
     public Tablero(Stage stage) {
         this.stage = stage;
         for (int i = 0; i < filas; i++) {
@@ -59,6 +62,18 @@ public class Tablero {
     }
 
     public void generarNumero() {
+        boolean hayEspacio = false;
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                if (tablero[i][j] == 0) {
+                    hayEspacio = true;
+                    break;
+                }
+            }
+            if (hayEspacio) break;
+        }
+        if (!hayEspacio) return;
+
         boolean celdaEncotrada = false;
         while (!celdaEncotrada) {
             Random r = new Random();
@@ -212,39 +227,14 @@ public class Tablero {
         juegoTerminado = true; // No hay celdas vacías ni movimientos válidos
     }
 
-    public boolean isJuegoTerminado() {
-        return juegoTerminado;
-    }
-
-    public boolean isWin() {
-        return win;
-    }
-
     public Scene getScene() {
-
-        // Creation de la estructura del tablero
-        GridPane tableroLayout = new GridPane();
+        // Creación del tablero
+        tableroLayout = new GridPane();
         tableroLayout.setHgap(5);
         tableroLayout.setVgap(5);
         tableroLayout.setAlignment(javafx.geometry.Pos.CENTER);
 
-        // Creation de las celdas
-        for (int i = 0; i < filas; i++) {
-            for (int j = 0; j < columnas; j++) {
-                StackPane celda = new StackPane();
-                celda.getStyleClass().add("celda");
-
-                Rectangle fondo = new Rectangle(96, 96);
-                fondo.setFill(obtenerColor(tablero[i][j]));
-                fondo.setArcWidth(20);
-                fondo.setArcHeight(20);
-
-                Text texto = getText(i, j);
-
-                celda.getChildren().addAll(fondo, texto);
-                tableroLayout.add(celda, j, i);
-            }
-        }
+        actualizarTablero();
 
         VBox tableroBox = new VBox(10);
         tableroBox.getChildren().add(tableroLayout);
@@ -268,7 +258,7 @@ public class Tablero {
         tableroCompleto.setAlignment(javafx.geometry.Pos.CENTER);
 
         Scene scene = new Scene(tableroCompleto, 440, 500);
-        scene.getStylesheets().add(getClass().getResource("/Styles/StylesTablero.css").toExternalForm());
+        scene.getStylesheets().add("/Styles/StylesTablero.css");
 
         scene.setOnKeyPressed(e -> {
             switch (e.getCode()) {
@@ -277,11 +267,40 @@ public class Tablero {
                 case LEFT, A -> moverIzquierda();
                 case RIGHT, D -> moverDerecha();
             }
-            stage.setScene(getScene());
-
+            actualizarTablero();
+            tableroLayout.requestFocus();
         });
 
         return scene;
+    }
+
+    private void actualizarTablero() {
+        tableroLayout.getChildren().clear(); // Eliminar celdas anteriores
+
+        for (int i = 0; i < filas; i++) {
+            for (int j = 0; j < columnas; j++) {
+                StackPane celda = new StackPane();
+                celda.getStyleClass().add("celda");
+
+                Rectangle fondo = new Rectangle(96, 96);
+                fondo.setFill(obtenerColor(tablero[i][j]));
+                fondo.setArcWidth(20);
+                fondo.setArcHeight(20);
+
+                Text texto = getText(i, j);
+
+                celda.getChildren().addAll(fondo, texto);
+                tableroLayout.add(celda, j, i);
+            }
+        }
+
+        if (juegoTerminado) {
+            if (win) {
+                mostrarAlerta("¡Felicidades!", "¡Has ganado!");
+            } else {
+                mostrarAlerta("¡Lo siento!", "¡Has perdido!");
+            }
+        }
 
     }
 
@@ -290,9 +309,9 @@ public class Tablero {
         if (tablero[i][j] == 8 || tablero[i][j] == 16 || tablero[i][j] == 32 || tablero[i][j] == 64 ||
                 tablero[i][j] == 128 || tablero[i][j] == 256 || tablero[i][j] == 512 ||
                 tablero[i][j] == 1024 || tablero[i][j] == 2048) {
-            texto.setStyle("-fx-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;");
+            texto.setStyle(" -fx-font-family: Rubik ;-fx-fill: white; -fx-font-size: 30px; -fx-font-weight: bold;");
         } else if (tablero[i][j] == 2 || tablero[i][j] == 4) {
-            texto.setStyle("-fx-fill: #756452; -fx-font-size: 30px; -fx-font-weight: bold;");
+            texto.setStyle("-fx-font-family: Rubik; -fx-fill: #756452; -fx-font-size: 30px; -fx-font-weight: bold;");
         }
         return texto;
     }
@@ -312,6 +331,14 @@ public class Tablero {
             case 2048 -> Color.web("#fdbe00"); // gradient ffd746 , fbbe0f
             default -> Color.web("#bdac97");
         };
+    }
+
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 
 
